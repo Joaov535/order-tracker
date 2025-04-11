@@ -6,5 +6,6 @@ use Joaov535\OrderTracker\Models\Order;
 
 interface CarriersInterface
 {
-    public function makeRequest(Order $order);
+    public function __construct(Order $order);
+    public function makeRequest();
 }
