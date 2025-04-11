@@ -1,6 +1,6 @@
 <?php
 
-namespace Workers\tracking\models;
+namespace Joaov535\OrderTracker\Interfaces;
 
 use Joaov535\OrderTracker\Models\Order;
 

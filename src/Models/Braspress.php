@@ -3,7 +3,7 @@
 namespace Joaov535\OrderTracker\Models;
 
 use GuzzleHttp\Client;
-use Workers\tracking\models\CarriersInterface;
+use Joaov535\OrderTracker\Interfaces\CarriersInterface;
 
 class Braspress implements CarriersInterface
 {
@@ -16,13 +16,20 @@ class Braspress implements CarriersInterface
 
     public function makeRequest()
     {
+        $token = $this->order->token ?? base64_encode($this->order->user . ":" . $this->order->pass);
+
         $client = new Client();
         $res = $client->request(
             'GET',
             static::ENDPOINT . $this->order->cnpj . "/" . $this->order->serial . "/json",
             [
-                "Authorization: Bearer " . $this->order->token
+                "headers" => [
+                    "Authorization" => "Basic " . $token,
+                    'Accept' => 'application/json',
+                ]
             ]
         );
+
+        var_dump($res);
     }
 }
