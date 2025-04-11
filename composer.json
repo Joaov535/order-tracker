@@ -1,0 +1,26 @@
+{
+    "name": "joaov535/order-tracker",
+    "description": "Biblioteca para realizar o rastreio de encomendas com transportadoras nacionais",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Joaov535\\OrderTracker\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "João Victor Araujo Cruz",
+            "email": "joaovictorcruz535@gmail.com"
+        }
+    ],
+    "minimum-stability": "beta",
+    "require": {
+        "php": "^8.2",
+        "ext-curl": "*",
+        "ext-soap": "*",
+        "ext-simplexml": "*",
+        "ext-dom": "*",
+        "guzzlehttp/guzzle": "^7.9"
+    }
+}
