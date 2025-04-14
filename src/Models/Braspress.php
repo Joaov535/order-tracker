@@ -30,6 +30,6 @@ class Braspress implements CarriersInterface
             ]
         );
 
-        var_dump($res);
+        var_dump($res->getHeader());
     }
 }
