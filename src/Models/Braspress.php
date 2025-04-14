@@ -3,16 +3,10 @@
 namespace Joaov535\OrderTracker\Models;
 
 use GuzzleHttp\Client;
-use Joaov535\OrderTracker\Interfaces\CarriersInterface;
 
-class Braspress implements CarriersInterface
+class Braspress extends Carriers
 {
-    private Order $order;
     const ENDPOINT = "https://api.braspress.com/v3/tracking/byNf/";
-    public function __construct(Order $order)
-    {
-        $this->order = $order;
-    }
 
     public function makeRequest()
     {
@@ -30,6 +24,6 @@ class Braspress implements CarriersInterface
             ]
         );
 
-        var_dump($res->getHeader());
+        // var_dump($res->getHeader());
     }
 }
