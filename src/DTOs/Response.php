@@ -1,6 +1,6 @@
 <?php
 
-namespace Joaov535\OrderTracker\Models;
+namespace Joaov535\OrderTracker\DTOs;
 
 use DateTime;
 use DateTimeInterface;
