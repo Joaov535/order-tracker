@@ -3,9 +3,10 @@
 namespace Joaov535\OrderTracker\Interfaces;
 
 use Joaov535\OrderTracker\Models\Order;
+use Joaov535\OrderTracker\Models\Response;
 
 interface CarriersInterface
 {
     public function __construct(Order $order);
-    public function makeRequest();
+    public function makeRequest(): Response;
 }
