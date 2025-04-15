@@ -3,6 +3,7 @@
 namespace Joaov535\OrderTracker\Models;
 
 use Joaov535\OrderTracker\Interfaces\CarriersInterface;
+use Joaov535\OrderTracker\DTOs\Response;
 
 abstract class CarriersAbstract implements CarriersInterface
 {
@@ -11,6 +12,5 @@ abstract class CarriersAbstract implements CarriersInterface
     public function __construct(Order $order)
     {
         $this->order = $order;
-        $this->response = new Response();
     }
 }

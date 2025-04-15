@@ -4,12 +4,12 @@ namespace Joaov535\OrderTracker\Models;
 
 use GuzzleHttp\Client;
 use Joaov535\OrderTracker\Exceptions\OrderTrackerException;
-use Joaov535\OrderTracker\Interfaces\CarriersInterface;
+use Joaov535\OrderTracker\DTOs\Response;
 
 
-class Rodonaves extends Carriers
+class Rodonaves extends CarriersAbstract
 {
-    public function makeRequest()
+    public function makeRequest(): Response
     {
         $auth = $this->getAuth();
         $client = new Client();
@@ -27,9 +27,7 @@ class Rodonaves extends Carriers
 
         $body = json_decode($response->getBody(), true);
 
-        return [
-            "resposta" => ""
-        ];
+        return $this->response;
     }
 
     public function getAuth()

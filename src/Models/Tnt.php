@@ -4,8 +4,9 @@ namespace Joaov535\OrderTracker\Models;
 
 use Joaov535\OrderTracker\DTOs\Response;
 
-class SSW extends CarriersAbstract
+class Tnt extends CarriersAbstract
 {
+    const ENDPOINT = "";
 
     public function makeRequest(): Response
     {
