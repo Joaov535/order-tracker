@@ -2,6 +2,7 @@
 
 namespace Joaov535\OrderTracker\Models;
 
+use DateTime;
 use GuzzleHttp\Client;
 use Joaov535\OrderTracker\DTOs\Response;
 
@@ -9,7 +10,7 @@ class Braspress extends CarriersAbstract
 {
     const ENDPOINT = "https://api.braspress.com/v3/tracking/byNf/";
 
-    public function makeRequest(): Response
+    public function makeRequest(): ?Response
     {
         $token = $this->order->token ?? base64_encode($this->order->user . ":" . $this->order->pass);
 
@@ -25,18 +26,26 @@ class Braspress extends CarriersAbstract
             ]
         );
 
-        $result = json_decode($res->getBody());
-        $data = $result->conhecimentos[0];
-        $this->response = new Response(
-            $this->order->serial,
-            $data->numero ?? null,
-            $data->previsaoEntrega ?? null,
-            $data->dataEntrega ?? null,
-            $data->status ?? null,
-            $data->ultimaOcorrencia ?? null,
-            $data->dataOcorrencia ?? null,
-        );
+        if ($res->getStatusCode() != "200") {
+            return null;
+        }
 
-        return $this->response;
+        $result = json_decode($res->getBody());
+        if (isset($result->conhecimentos[0])) {
+            $data = $result->conhecimentos[0];
+            $this->response = new Response(
+                (int)$this->order->serial,
+                $data->numero ?? null,
+                DateTime::createFromFormat("d/m/Y", $data->previsaoEntrega) ?: null,
+                DateTime::createFromFormat("d/m/Y", $data->dataEntrega) ?: null,
+                $data->status ?? null,
+                $data->ultimaOcorrencia ?? null,
+                DateTime::createFromFormat("d/m/Y H:i:s", $data->dataOcorrencia) ?: null,
+            );
+
+            return $this->response;
+        }
+
+        return null;
     }
 }
