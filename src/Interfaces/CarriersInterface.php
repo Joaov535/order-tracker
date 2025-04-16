@@ -8,5 +8,5 @@ use Joaov535\OrderTracker\DTOs\Response;
 interface CarriersInterface
 {
     public function __construct(Order $order);
-    public function makeRequest(): Response;
+    public function makeRequest(): ?Response;
 }

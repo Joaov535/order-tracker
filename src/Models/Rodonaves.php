@@ -9,7 +9,7 @@ use Joaov535\OrderTracker\DTOs\Response;
 
 class Rodonaves extends CarriersAbstract
 {
-    public function makeRequest(): Response
+    public function makeRequest(): ?Response
     {
         $auth = $this->getAuth();
         $client = new Client();

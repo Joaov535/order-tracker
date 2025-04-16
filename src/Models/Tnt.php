@@ -8,7 +8,7 @@ class Tnt extends CarriersAbstract
 {
     const ENDPOINT = "";
 
-    public function makeRequest(): Response
+    public function makeRequest(): ?Response
     {
         return $this->response;
     }

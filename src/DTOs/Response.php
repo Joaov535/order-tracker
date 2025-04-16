@@ -19,11 +19,11 @@ class Response
     {
         $this->serial = $serial;
         $this->carrierCode = $carrierCode;
-        $this->deliveryForecast = new DateTime($deliveryForecast);
-        $this->deliveryDate = new DateTime($deliveryDate);
+        $this->deliveryForecast = DateTime::createFromFormat('d/m/Y', $deliveryForecast);
+        $this->deliveryDate = DateTime::createFromFormat('d/m/Y', $deliveryDate);
         $this->status = $status;
         $this->details = $details;
-        $this->lastUpdate = new DateTime($lastUpdate);
+        $this->lastUpdate = DateTime::createFromFormat('d/m/Y H:i:s', $lastUpdate);
     }
 
     public function getSerial(): int
