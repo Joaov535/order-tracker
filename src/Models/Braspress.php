@@ -34,7 +34,7 @@ class Braspress extends CarriersAbstract
         if (isset($result->conhecimentos[0])) {
             $data = $result->conhecimentos[0];
             $this->response = new Response(
-                (int)$this->order->serial,
+                $this->order->serial,
                 $data->numero ?? null,
                 DateTime::createFromFormat("d/m/Y", $data->previsaoEntrega) ?: null,
                 DateTime::createFromFormat("d/m/Y", $data->dataEntrega) ?: null,
