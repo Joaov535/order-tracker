@@ -42,10 +42,29 @@ class Braspress extends CarriersAbstract
                 $data->ultimaOcorrencia ?? null,
                 DateTime::createFromFormat("d/m/Y H:i:s", $data->dataOcorrencia) ?: null,
             );
-
-            return $this->response;
+        } else if (isset($result->statusCode)) {
+            $this->response = new Response(
+                $this->order->serial,
+                null,
+                null,
+                null,
+                null,
+                $result->message ?: null,
+                null,
+                true
+            );
+        } else {
+            $this->response = new Response(
+                $this->order->serial,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                false
+            );
         }
-
-        return null;
+        return $this->response;
     }
 }
