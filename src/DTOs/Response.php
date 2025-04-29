@@ -13,7 +13,8 @@ class Response
         protected ?DateTimeInterface $deliveryDate,
         protected ?string $status,
         protected ?string $details,
-        protected ?DateTimeInterface $lastUpdate
+        protected ?DateTimeInterface $lastUpdate,
+        protected bool $errors = false
     ) {}
 
     public function getSerial(): int
