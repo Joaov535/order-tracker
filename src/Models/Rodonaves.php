@@ -56,6 +56,6 @@ class Rodonaves extends CarriersAbstract
             throw new OrderTrackerException("Credenciais inválidas.", 400, null, "Rodonaves getAuth()");
         }
 
-        throw new OrderTrackerException("Falha ao obter token de acesso.", $response->getStatusCode());
+        throw new OrderTrackerException("Falha ao obter token de acesso.", $response->getStatusCode(), null, "Rodonaves getAuth()");
     }
 }
