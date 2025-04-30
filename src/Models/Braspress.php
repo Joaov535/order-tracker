@@ -5,6 +5,7 @@ namespace Joaov535\OrderTracker\Models;
 use DateTime;
 use GuzzleHttp\Client;
 use Joaov535\OrderTracker\DTOs\Response;
+use Joaov535\OrderTracker\Exceptions\OrderTrackerException;
 
 class Braspress extends CarriersAbstract
 {
@@ -66,30 +67,9 @@ class Braspress extends CarriersAbstract
                     false
                 );
             }
-        } catch (\GuzzleHttp\Exception\ClientException $e) {
-            $this->response = new Response(
-                $this->order->serial,
-                null,
-                null,
-                null,
-                "Erro na requisição",
-                $e->getResponse()->getStatusCode(),
-                null,
-                true
-            );
-        }catch(\Exception $e) {
-            $this->response = new Response(
-                $this->order->serial,
-                null,
-                null,
-                null,
-                "Erro na requisição",
-                $e->getCode(),
-                null,
-                true
-            );
-        } finally {
             return $this->response;
+        } catch (\Exception $e) {
+            throw new OrderTrackerException($e->getMessage(), $e->getCode(), null, "Braspress makeRequest()");
         }
     }
 }
