@@ -2,8 +2,10 @@
 
 namespace Joaov535\OrderTracker\Models;
 
+use DateTime;
 use GuzzleHttp\Client;
 use Joaov535\OrderTracker\DTOs\Response;
+use Joaov535\OrderTracker\Exceptions\OrderTrackerException;
 
 class Tnt extends CarriersAbstract
 {
@@ -28,11 +30,11 @@ class Tnt extends CarriersAbstract
 
         $body = json_decode($res->getBody());
 
-        if ($res->getStatusCode() === 200) {
-            return $body[0];
+        if ($res->getStatusCode() !== 200 || empty($body)) {
+            return null;
         }
 
-        return null;
+        return $body[0];
     }
 
     public function makeRequest(): ?Response
@@ -42,7 +44,7 @@ class Tnt extends CarriersAbstract
             $doc = $this->getDocInfo();
 
             if (is_null($doc) || empty($doc)) {
-                $this->response = new Response($this->order->serial, null, null, null, "Não encontrado", null, null);
+                $this->response = new Response($this->order->serial, null, null, null, "Sem resposta", null, null);
                 return $this->response;
             }
 
@@ -56,14 +58,43 @@ class Tnt extends CarriersAbstract
                     ]
                 ]
             );
-            var_dump(json_decode($res->getBody()));
-            if ($res->getStatusCode() != "200") {
+
+            $result = json_decode($res->getBody());
+
+            if ($res->getStatusCode() != "200" || empty($result->trackingHistory)) {
                 return null;
             }
 
+            $this->setReturn($result);
+
+            return $this->response;
         } catch (\Exception $e) {
-            var_dump($e);
+            throw new OrderTrackerException($e->getMessage(), $e->getCode(), null, 'TNT makeRequest()');
         }
+
         return null;
+    }
+
+    private function setReturn($data): void
+    {
+        $history = $data->trackingHistory[0];
+        $lastEvent = isset($data->eventoAtualInfo) ? $data->eventoAtualInfo : null;
+        $deliveryDate = null;
+        $details = null;
+        $lastUpdate = new DateTime();
+
+        if($history->occurrence == "Entrega realizada")
+        {
+            $deliveryDate = DateTime::createFromFormat('d/m/Y H:i', $history->timeDate);
+            $details = $history->observations;
+        } else {
+            $details = $history->occurrence . " " . $history-> timeDate . " " . $history->observations;
+
+            if($history->occurrence != "Previsão de chegada") {
+                $lastUpdate = DateTime::createFromFormat('d/m/Y H:i', $history);
+            }
+        }
+
+        $this->response = new Response($this->order->serial, $data->idDocumento ?? null, DateTime::createFromFormat('d/m/Y', $lastEvent->previsaoEntrega), $deliveryDate, $history->occurrence, $details, $lastUpdate);
     }
 }
