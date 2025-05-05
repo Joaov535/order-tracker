@@ -91,7 +91,7 @@ class Tnt extends CarriersAbstract
             $details = $history->occurrence . " " . $history-> timeDate . " " . $history->observations;
 
             if($history->occurrence != "Previsão de chegada") {
-                $lastUpdate = DateTime::createFromFormat('d/m/Y H:i', $history);
+                $lastUpdate = DateTime::createFromFormat('d/m/Y H:i', $history->timeDate);
             }
         }
 
