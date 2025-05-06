@@ -65,13 +65,15 @@ class SaoMiguel extends CarriersAbstract
         $lastOccurrency = $data->ocorrencias[$lastOccurrencyNumber];
 
         $deliveryDate = null;
+        $proof = null;
 
         if ($lastOccurrency->descricaoOcorrencia == "Entrega realizada") {
             $timezone = new DateTimeZone("-03:00");
             $deliveryDate = new DateTime($lastOccurrency->dataRegistro, $timezone);
+            $proof = $lastOccurrency->idComprovante ?? null;
         }
 
-        $proof = $lastOccurrency->idComprovante ?? null;
+        
 
         $this->response = new Response(
             $this->order->serial,
