@@ -29,7 +29,7 @@ class Braspress extends CarriersAbstract
             );
 
             if ($res->getStatusCode() != "200") {
-                return null;
+                throw new OrderTrackerException("Erro ao realizar requisição para o serial {$this->order->serial}", $res->getStatusCode());
             }
 
             $result = json_decode($res->getBody());
@@ -45,27 +45,9 @@ class Braspress extends CarriersAbstract
                     DateTime::createFromFormat("d/m/Y H:i:s", $data->dataOcorrencia) ?: null,
                 );
             } else if (isset($result->statusCode)) {
-                $this->response = new Response(
-                    $this->order->serial,
-                    null,
-                    null,
-                    null,
-                    null,
-                    $result->message ?: null,
-                    null,
-                    true
-                );
+                throw new OrderTrackerException("Erro. Serial {$this->order->serial}. " . $result->message);
             } else {
-                $this->response = new Response(
-                    $this->order->serial,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    false
-                );
+                throw new OrderTrackerException("Sem resultado retornado pela API para o serial {$this->order->serial}");
             }
             return $this->response;
         } catch (\Exception $e) {

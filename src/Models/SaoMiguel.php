@@ -34,14 +34,14 @@ class SaoMiguel extends CarriersAbstract
             ]);
 
             if ($res->getStatusCode() != 200) {
-                throw new OrderTrackerException("Erro ao realizar requisição", $res->getStatusCode());
+                throw new OrderTrackerException("Erro ao realizar requisição para o serial {$this->order->serial}", $res->getStatusCode());
             }
 
             $data = json_decode($res->getBody());
 
 
             if (empty($data)) {
-                return null;
+                throw new OrderTrackerException("Sem resultado retornado pela API para o serial {$this->order->serial}");
             }
 
             $this->setReturn($data[0]);

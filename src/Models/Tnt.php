@@ -61,8 +61,12 @@ class Tnt extends CarriersAbstract
 
             $result = json_decode($res->getBody());
 
-            if ($res->getStatusCode() != "200" || empty($result->trackingHistory)) {
-                return null;
+            if ($res->getStatusCode() != "200") {
+                throw new OrderTrackerException("Falha na requisição para o serial {$this->order->serial}", $res->getStatusCode());
+            }
+
+            if(empty($result->trackingHistory)) {
+                throw new OrderTrackerException("Sem resultado retornado pela API para o serial {$this->order->serial}");
             }
 
             $this->setReturn($result);
