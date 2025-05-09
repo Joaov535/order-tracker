@@ -32,16 +32,17 @@ class Alfa extends CarriersAbstract
             );
 
             if ($res->getStatusCode() != "200") {
-                return null;
+                throw new OrderTrackerException("Falha na requisição para o serial {$this->order->serial}.", $res->getStatusCode());
             }
 
-            $xml = new SimpleXMLElement($res->getBody()); var_dump($xml);
+            $xml = new SimpleXMLElement($res->getBody()); 
+            // var_dump(count($xml->rst->embarque->embNF));
 
-            // if((string)$xml->rst->rstStatus != "RASTREAMENTO CONCLUIDO COM SUCESSO") {
-            //     throw new OrderTrackerException((string)$xml->rst->rstStatus);
-            // }
+            if((string)$xml->rst->rstStatus != "RASTREAMENTO CONCLUIDO COM SUCESSO") {
+                throw new OrderTrackerException("Erro para o serial {$this->order->serial}. ".(string)$xml->rst->rstStatus);
+            }
             
-            // $this->setReturn($xml);
+            $this->setReturn($xml);
 
             return $this->response;
         } catch (\Exception $e) {
@@ -64,7 +65,17 @@ class Alfa extends CarriersAbstract
             $status = "Entregue";
             $deliveryDate = new DateTime((string)$xml->rst->entrega->entNF->entData . (string)$xml->rst->entrega->entNF->entHora);
             $details = "Comprovante: " . (string)$xml->rst->entrega->entNF->entComprovante;
-        } 
+        }else if(isset($xml->rst->embarque->embNF)) {
+            $status = "Em trânsito";
+            $n = count($xml->rst->embarque->embNF) - 1;
+            $lastStatus = $xml->rst->embarque->embNF[$n];
+            $details = "Saiu de " . $lastStatus->embOrigem . " em " . $lastStatus->embSaida;
+            if(strtolower($lastStatus->embChegada) == "none") {
+                $details .= " Com destino a " . $lastStatus->embDestino;
+            } else {
+                $details .= " e chegou a " . $lastStatus->embDestino . " em " . $lastStatus->embChegada;
+            }
+        }
         
         $this->response = new Response($this->order->serial, $code, $deliveryForecast, $deliveryDate, $status, $details, $lastUpdate);
     }
