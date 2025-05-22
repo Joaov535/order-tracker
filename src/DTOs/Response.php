@@ -7,7 +7,7 @@ use DateTimeInterface;
 class Response
 {
     public function __construct(
-        protected int $serial,
+        protected string $serial,
         protected ?string $carrierCode,
         protected ?DateTimeInterface $deliveryForecast,
         protected ?DateTimeInterface $deliveryDate,
