@@ -17,7 +17,7 @@ class Response
         protected bool $errors = false
     ) {}
 
-    public function getSerial(): int
+    public function getSerial(): string
     {
         return $this->serial;
     }
